@@ -1,0 +1,14 @@
+div#statusMenu
+  div#loginState
+    h2 hello&nbsp;{{userName}}! 
+  div#clock
+  button#clockRefresh(ng-click="clockRe()")
+    서버시간받아오기
+div#eventList 
+  .topcoat-list__container.scroller(style='top: 138px;')
+    ul.topcoat-list.list
+      li.topcoat-list__item(ng-repeat='event in events')
+        a(ng-click='loadEvent(event._id)')
+          {{event.event}}
+div#calendar(ui-calendar="uiConfig.calendar" ng-model="eventSources")
+

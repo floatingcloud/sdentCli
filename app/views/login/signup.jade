@@ -1,0 +1,10 @@
+h1 SignUp
+form.form.col-md-12.center-block.css-form
+  .form-group
+    input.form-control.input-lg(type='text', placeholder='your id ex\) d429', ng-model="userInfo.id",requered)
+    input.form-control.input-lg(type='password', placeholder='Password', ng-model="userInfo.password",requered)
+    input.form-control.input-lg(type='text', placeholder='name ex\)김대원', ng-model="userInfo.name",requered)
+    input.form-control.input-lg(type='text', placeholder='2011-22415', ng-model="userInfo.studentNumber",requered)
+    input.form-control.input-lg(type='text', placeholder='number ex\)08', ng-model="userInfo.number",requered)
+  .form-group
+    button.btn.btn-primary.btn-lg.btn-block(ng-click='signUp()',ng-disabled="form.$invalid") Sign Up
