@@ -3,6 +3,8 @@
 angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
   userName=[]
   user_id=[]
+  userNameE=[]
+  user_idE=[]
   #Util.getUsersList()
     #.then (data) ->
       #for item in data
@@ -14,7 +16,7 @@ angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
     '담당자'
     '카테고리'
     '날짜'
-    '오전/오후'
+    '시간'
     '배정인원'
   ]
   $scope.header2 = [
@@ -26,19 +28,34 @@ angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
     '신청종료'
     '우선신청'
     '우선종료'
+    '신청횟수'
+  ]
+  $scope.header3 = [
+    '횟수에외'
+    '횟수'
   ]
   sendData = {}
   $casesContainer = {}
   $eventContainer = {}
   $priorContainer = {}
+  $exceptionContainer = {}
   $scope.submit = -> 
     sendData.event = $eventContainer.data('handsontable').getData()
     sendData.cases = $casesContainer.data('handsontable').getData()
     sendData.prior =[]
+    sendData.exception = []
     tmpPrior = $priorContainer.data('handsontable').getData()
     tmpPrior.forEach (item) ->
       index = userName.indexOf(item[0])
       sendData.prior.push user_id[index]
+
+    tmpEx = $exceptionContainer.data('handsontable').getData()
+    tmpEx.forEach (item) ->
+      index = userNameE.indexOf(item[0])
+      sendData.exception.push {
+                                userId : user_idE[index]
+                                many : item[1]
+                              }
       console.log index
       console.log item
       console.log sendData.prior
@@ -73,6 +90,7 @@ angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
                     source:[
                               "오전"
                               "오후"
+                              "종일"
                           ]
                   }
                   {
@@ -84,7 +102,7 @@ angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
       colHeaders: $scope.header2
       manualColumnResize: true
       startRows : 1
-      startCols : 8
+      startCols : 9
       columns:  [
                   {
                     type:"text"
@@ -109,6 +127,9 @@ angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
                   }
                   {
                     type:"date"
+                  }
+                  {
+                    type:"numeric"
                   }
 
                 ]
@@ -134,10 +155,51 @@ angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
                           userName.push item.number + item.name
                           user_id.push item._id
                       ,(status) ->
+                          alert status
+ 
+  )
+  $exceptionContainer=$("#exception").handsontable(
+      rowHeaders: true
+      colHeaders: $scope.header3
+      contextMenu: true
+      startCols : 2
+      startRows : 1
+      manualColumnResize: true
+      columns:  [
+                  {
+                    type:"autocomplete"
+                    filter: false
+                    source: userName
+                    strict: true
+                  }
+                  {
+                    type:"numeric"
+                  }
+                ]
+      beforeInit: Util.getUsersList()
+                      .then (data) ->
+                        for item in data
+                          userNameE.push item.number + item.name
+                          user_idE.push item._id
+                      ,(status) ->
                          alert status
  
   )
 
+  Util.getEventsList()
+        .then (data) ->
+            $scope.events = data
+        ,(status) ->
+            alert status
+
+  #$scope.deleteEvent =  Util.getEventsList()
+                            #.then (data) ->
+                                #if data isnt 'success'
+                                  #alert data
+                                  #return
+                                #alert '삭제성공'
+                            #.error (error, status) ->
+                                    #console.log "$http.error"
   return
 
 

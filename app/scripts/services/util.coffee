@@ -17,6 +17,22 @@ angular.module('services').factory 'Util', ($q, $http, $location,$document, Host
       .error (data, status) ->
         deferred.reject status
       return deferred.promise
+  getEventsList: ->
+    deferred = $q.defer()
+    this.makeReq('get','eventList')
+      .success (data) ->
+        deferred.resolve data
+      .error (data, status) ->
+        deferred.reject status
+      return deferred.promise
+  deleteEvent: (para) ->
+    deferred = $q.defer()
+    this.makeReq('post','deleteEvent',para)
+      .success (data) ->
+        deferred.resolve data
+      .error (data, status) ->
+        deferred.reject status
+      return deferred.promise
 
 
 

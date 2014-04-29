@@ -6,28 +6,22 @@ angular.module('hiin')
                 clockFace: 'TwelveHourClock'
     $scope.uiConfig = {
       calendar:{
-        height: 450
-        width: 450
         editable: true
         header:{
           left: 'title'
           center: ''
           right: 'today prev,next'
         }
-        eventClick: (event) -> 
+        eventClick: (event) ->
+          console.log event
+          if event.type is "applyForm"
             sendData = {
                           _id : event._id
                         }
             socket.emit 'apply', sendData
-        eventMouseover: (event) ->
-            sendData = {
-                          _id : event._id
-                        }
-            socket.emit 'hoverResult', sendData
-            console.log 'hover'
-        #dayClick: $scope.alertEventOnClick
-        #eventDrop: $scope.alertOnDrop
-        #eventResize: $scope.alertOnResize
+          else
+            console.log "test"
+            
       }
     }
     $scope.eventSources = []
@@ -42,23 +36,25 @@ angular.module('hiin')
       console.log data
       $scope.events = data
 
+    socket.on 'loadEventInfo', (data) ->
+      console.log data
+      $scope.eventInfo = data
+
     socket.on 'serverTime', (data) ->
       clock.setTime data
 
     socket.on 'loadCases', (data) ->
-      console.log(data)
+      console.log data
+      $scope.eventSources.splice(0,$scope.eventSources.length)
       $scope.eventSources.push data
 
-    socket.on 'full', () ->
+    socket.on 'alert', (data) ->
       socket.emit 'eventList'
-      alert '이미 꽉찼습니다'
-
-    socket.on 'dberr', () ->
-      alert '저장에 실패했습니다. 다시시도해주세요'
-      socket.emit 'eventList'
+      alert data
 
     $scope.loadEvent =  (event_id) ->
       socket.emit 'loadCases', event_id
+      socket.emit 'loadEventInfo', event_id
 
     $scope.userName = sessionStorage.loginUserName
 
@@ -66,3 +62,12 @@ angular.module('hiin')
     $scope.clockRe = () ->
       socket.emit 'serverTime'
       console.log 'serverTime'
+    $scope.logout = () ->
+      Util.makeReq('get','logout')
+        .success (data) ->
+          if data isnt 'success logout'
+            alert data
+            return
+          Util.Go('/')
+        .error (error, status) ->
+          console.log "$http.error"

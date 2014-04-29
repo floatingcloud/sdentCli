@@ -1,25 +1,39 @@
 (function() {
   'use strict';
   angular.module('hiin').controller('adminCtrl', function($scope, $q, $window, Util) {
-    var $casesContainer, $eventContainer, $priorContainer, sendData, userName, user_id;
+    var $casesContainer, $eventContainer, $exceptionContainer, $priorContainer, sendData, userName, userNameE, user_id, user_idE;
     userName = [];
     user_id = [];
-    $scope.header1 = ['담당자', '카테고리', '날짜', '오전/오후', '배정인원'];
-    $scope.header2 = ['이벤트', '이름', '시작일', '끝나는일', '신청시간', '신청종료', '우선신청', '우선종료'];
+    userNameE = [];
+    user_idE = [];
+    $scope.header1 = ['담당자', '카테고리', '날짜', '시간', '배정인원'];
+    $scope.header2 = ['이벤트', '이름', '시작일', '끝나는일', '신청시간', '신청종료', '우선신청', '우선종료', '신청횟수'];
+    $scope.header3 = ['횟수에외', '횟수'];
     sendData = {};
     $casesContainer = {};
     $eventContainer = {};
     $priorContainer = {};
+    $exceptionContainer = {};
     $scope.submit = function() {
-      var tmpPrior;
+      var tmpEx, tmpPrior;
       sendData.event = $eventContainer.data('handsontable').getData();
       sendData.cases = $casesContainer.data('handsontable').getData();
       sendData.prior = [];
+      sendData.exception = [];
       tmpPrior = $priorContainer.data('handsontable').getData();
       tmpPrior.forEach(function(item) {
         var index;
         index = userName.indexOf(item[0]);
-        sendData.prior.push(user_id[index]);
+        return sendData.prior.push(user_id[index]);
+      });
+      tmpEx = $exceptionContainer.data('handsontable').getData();
+      tmpEx.forEach(function(item) {
+        var index;
+        index = userNameE.indexOf(item[0]);
+        sendData.exception.push({
+          userId: user_idE[index],
+          many: item[1]
+        });
         console.log(index);
         console.log(item);
         return console.log(sendData.prior);
@@ -50,7 +64,7 @@
         }, {
           type: "autocomplete",
           filter: false,
-          source: ["오전", "오후"]
+          source: ["오전", "오후", "종일"]
         }, {
           type: "numeric"
         }
@@ -60,7 +74,7 @@
       colHeaders: $scope.header2,
       manualColumnResize: true,
       startRows: 1,
-      startCols: 8,
+      startCols: 9,
       columns: [
         {
           type: "text"
@@ -78,6 +92,8 @@
           type: "date"
         }, {
           type: "date"
+        }, {
+          type: "numeric"
         }
       ]
     });
@@ -110,6 +126,42 @@
         return alert(status);
       })
     });
+    $exceptionContainer = $("#exception").handsontable({
+      rowHeaders: true,
+      colHeaders: $scope.header3,
+      contextMenu: true,
+      startCols: 2,
+      startRows: 1,
+      manualColumnResize: true,
+      columns: [
+        {
+          type: "autocomplete",
+          filter: false,
+          source: userName,
+          strict: true
+        }, {
+          type: "numeric"
+        }
+      ]
+    }, {
+      beforeInit: Util.getUsersList().then(function(data) {
+        var item, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = data.length; _i < _len; _i++) {
+          item = data[_i];
+          userNameE.push(item.number + item.name);
+          _results.push(user_idE.push(item._id));
+        }
+        return _results;
+      }, function(status) {
+        return alert(status);
+      })
+    });
+    Util.getEventsList().then(function(data) {
+      return $scope.events = data;
+    }, function(status) {
+      return alert(status);
+    });
   });
 
 }).call(this);
@@ -123,8 +175,6 @@
     });
     $scope.uiConfig = {
       calendar: {
-        height: 450,
-        width: 450,
         editable: true,
         header: {
           left: 'title',
@@ -133,18 +183,15 @@
         },
         eventClick: function(event) {
           var sendData;
-          sendData = {
-            _id: event._id
-          };
-          return socket.emit('apply', sendData);
-        },
-        eventMouseover: function(event) {
-          var sendData;
-          sendData = {
-            _id: event._id
-          };
-          socket.emit('hoverResult', sendData);
-          return console.log('hover');
+          console.log(event);
+          if (event.type === "applyForm") {
+            sendData = {
+              _id: event._id
+            };
+            return socket.emit('apply', sendData);
+          } else {
+            return console.log("test");
+          }
         }
       }
     };
@@ -158,29 +205,42 @@
       console.log(data);
       return $scope.events = data;
     });
+    socket.on('loadEventInfo', function(data) {
+      console.log(data);
+      return $scope.eventInfo = data;
+    });
     socket.on('serverTime', function(data) {
       return clock.setTime(data);
     });
     socket.on('loadCases', function(data) {
       console.log(data);
+      $scope.eventSources.splice(0, $scope.eventSources.length);
       return $scope.eventSources.push(data);
     });
-    socket.on('full', function() {
+    socket.on('alert', function(data) {
       socket.emit('eventList');
-      return alert('이미 꽉찼습니다');
-    });
-    socket.on('dberr', function() {
-      alert('저장에 실패했습니다. 다시시도해주세요');
-      return socket.emit('eventList');
+      return alert(data);
     });
     $scope.loadEvent = function(event_id) {
-      return socket.emit('loadCases', event_id);
+      socket.emit('loadCases', event_id);
+      return socket.emit('loadEventInfo', event_id);
     };
     $scope.userName = sessionStorage.loginUserName;
     $scope.caseClick = function() {};
-    return $scope.clockRe = function() {
+    $scope.clockRe = function() {
       socket.emit('serverTime');
       return console.log('serverTime');
+    };
+    return $scope.logout = function() {
+      return Util.makeReq('get', 'logout').success(function(data) {
+        if (data !== 'success logout') {
+          alert(data);
+          return;
+        }
+        return Util.Go('/');
+      }).error(function(error, status) {
+        return console.log("$http.error");
+      });
     };
   });
 

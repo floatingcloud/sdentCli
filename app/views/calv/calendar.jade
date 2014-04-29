@@ -1,8 +1,10 @@
 div#statusMenu
   div#loginState
     h2 hello&nbsp;{{userName}}! 
+    button.btn.btn-primary.btn-sm#logout(ng-click="logout()")
+      로그아웃
   div#clock
-  button#clockRefresh(ng-click="clockRe()")
+  button.btn.btn-primary.btn-sm#clockRefresh(ng-click="clockRe()")
     서버시간받아오기
 div#eventList 
   .topcoat-list__container.scroller(style='top: 138px;')
@@ -10,5 +12,32 @@ div#eventList
       li.topcoat-list__item(ng-repeat='event in events')
         a(ng-click='loadEvent(event._id)')
           {{event.event}}
+hr
+div#evnetInfo
+    이벤트종류:{{eventInfo.event}}
+    br
+    이벤트이름:{{eventInfo.name}}
+    br
+    신청기간:{{eventInfo.startDate}}~{{eventInfo.endDate}}
+    br
+    우선신청시간:{{eventInfo.priorTime}}~{{eventInfo.priorEnd}}
+    br
+    일반신청시간:{{eventInfo.applyTime}}~{{eventInfo.applyEnd}}
+    br
+    기본신청횟수:{{eventInfo.min}}
+    br
+hr
+table#prior
+  tr
+    td
+      우선신청자
+  tr
+    td(ng-repeat='ps in eventInfo.priorList'){{ps.name}}/
+  tr
+    td
+     여러번신청해야하는 사람
+  tr
+    td(ng-repeat='ps in eventInfo.exceptors'){{ps.except.name}}(&nbsp;{{ps.num}}&nbsp;)/
+    //-div#priorList(ng-rpeat='us in eventInfo.
 div#calendar(ui-calendar="uiConfig.calendar" ng-model="eventSources")
 

@@ -2,10 +2,24 @@ form.form.col-md-6.center-block.css-form
   button.btn.btn-primary.btn-lg.btn-block(ng-click="submit()") 입력 
 br
 br
+br
+h1 신청이벤트작성
+div#setting
+br
+br
+h1 개별케이스입력
 div#dataTable
 br
 br
-div#setting
-br
+h1 우선권자리스트작성
 div#prior
-
+h1 횟수예외자작성
+br
+div#exception
+div#eventList 
+    .topcoat-list__container.scroller(style='top: 138px;')
+      ul.topcoat-list.list
+        li.topcoat-list__item(ng-repeat='event in events')
+          {{event.event}}&nbsp;&nbsp;&nbsp;
+          button.btn.btn-primary.btn-sm#deleteEvent(ng-click="deleteEvent({{event._id}})")
+            이벤트삭제

@@ -73,6 +73,26 @@ angular.module('services', [])
           return deferred.reject(status);
         });
         return deferred.promise;
+      },
+      getEventsList: function() {
+        var deferred;
+        deferred = $q.defer();
+        this.makeReq('get', 'eventList').success(function(data) {
+          return deferred.resolve(data);
+        }).error(function(data, status) {
+          return deferred.reject(status);
+        });
+        return deferred.promise;
+      },
+      deleteEvent: function(para) {
+        var deferred;
+        deferred = $q.defer();
+        this.makeReq('post', 'deleteEvent', para).success(function(data) {
+          return deferred.resolve(data);
+        }).error(function(data, status) {
+          return deferred.reject(status);
+        });
+        return deferred.promise;
       }
     };
   });
