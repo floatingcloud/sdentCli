@@ -1,0 +1,103 @@
+nav.navbar.navbar-inverse(role='navigation')
+    .container-fluid
+        //
+           Brand and toggle get grouped for better mobile display 
+        .navbar-header
+          button.navbar-toggle(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='')  
+            i.fa.fa-skype.fa-lg
+              | &nbsp Sdent admin
+        //
+           Collect the nav links, forms, and other content for toggling 
+        #bs-example-navbar-collapse-1.collapse.navbar-collapse
+          ul.nav.navbar-nav
+            li
+              a(href='#/admin')
+                i.fa.fa-list-alt.fa-lg
+                  &nbsp 이벤트생성
+            li.active
+              a(href='#/adminEdit') 
+                i.fa.fa-pencil-square-o.fa-lg
+                  &nbsp 이벤트수정
+
+            li
+              a(href='#/adminDel') 
+                i.fa.fa-trash-o.fa-lg
+                  &nbsp 이벤트삭제
+            li
+              a(href='#/adminResult') 
+                i.fa.fa-trash-o.fa-lg
+                  &nbsp 결과보기
+
+
+
+          ul.nav.navbar-nav.navbar-right
+            li.dropdown
+              a.dropdown-toggle(href='#', data-toggle='dropdown')
+                i.fa.fa-cog.fa-lg
+                  | &nbsp Setting
+                b.caret
+              ul.dropdown-menu
+                li
+                  a(href='') 
+                    i.fa.fa-user.fa-lg
+                    |  &nbsp User
+                li
+                  a(href='')
+                    i.fa.fa-unlock.fa-lg
+                    |  Log out
+
+
+div.container
+  form.form.center-block.css-form
+    div.row
+      button.btn.btn-inverse.btn-lg.col-md-3(ng-click="submit()") 이벤트수정 
+  br
+  br
+
+  div.col-md-4
+    .panel.panel-default#eventList     
+      .panel-heading 이벤트리스트
+      .panel-body
+        ul.list-unstyled
+         li(ng-repeat='event in events')
+            a(ng-click='loadForUpdate(event)')
+              {{event.event}}
+
+  div.row
+    div.col-md-12
+      div.btn-group
+        button.btn.btn-inverse.disable 신청이벤트
+        button.btn.btn-default 이벤트색상선택
+        input(type='color' placeholder='이벤트색상' ng-model='eventColor')
+      div#setting
+  br
+  br
+
+  div.row
+    div.col-md-6
+      div.btn-group
+        button.btn.btn-inverse
+          i.fa.fa-users.fa-sm
+            | &nbsp 우선권자
+        div(multi-select='multi-select', input-model='selDataPrior', output-model='selOutputPrior', 
+          button-label='name', item-label='name', tick-property="ticked",
+          orientation='vertical', selection-mode='multiple', max-labels='1', ng-click="prior()")
+      div#prior
+  
+    div.col-md-6    
+      div.btn-group
+        button.btn.btn-inverse
+          i.fa.fa-users.fa-sm
+            | &nbsp 횟수예외자
+         div(multi-select='multi-select', input-model='selDataEx', output-model='selOutputEx', 
+          button-label='name', item-label='name', tick-property="ticked",
+          orientation='vertical', selection-mode='multiple', max-labels='1', ng-click="excep()")
+      div#exception
+
+
+

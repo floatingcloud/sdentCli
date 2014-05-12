@@ -1,43 +1,108 @@
-div#statusMenu
-  div#loginState
-    h2 hello&nbsp;{{userName}}! 
-    button.btn.btn-primary.btn-sm#logout(ng-click="logout()")
-      로그아웃
-  div#clock
-  button.btn.btn-primary.btn-sm#clockRefresh(ng-click="clockRe()")
-    서버시간받아오기
-div#eventList 
-  .topcoat-list__container.scroller(style='top: 138px;')
-    ul.topcoat-list.list
-      li.topcoat-list__item(ng-repeat='event in events')
-        a(ng-click='loadEvent(event._id)')
-          {{event.event}}
-hr
-div#evnetInfo
-    이벤트종류:{{eventInfo.event}}
-    br
-    이벤트이름:{{eventInfo.name}}
-    br
-    신청기간:{{eventInfo.startDate}}~{{eventInfo.endDate}}
-    br
-    우선신청시간:{{eventInfo.priorTime}}~{{eventInfo.priorEnd}}
-    br
-    일반신청시간:{{eventInfo.applyTime}}~{{eventInfo.applyEnd}}
-    br
-    기본신청횟수:{{eventInfo.min}}
-    br
-hr
-table#prior
-  tr
-    td
-      우선신청자
-  tr
-    td(ng-repeat='ps in eventInfo.priorList'){{ps.name}}/
-  tr
-    td
-     여러번신청해야하는 사람
-  tr
-    td(ng-repeat='ps in eventInfo.exceptors'){{ps.except.name}}(&nbsp;{{ps.num}}&nbsp;)/
-    //-div#priorList(ng-rpeat='us in eventInfo.
-div#calendar(ui-calendar="uiConfig.calendar" ng-model="eventSources")
+head
+  body
+      nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+          .container-fluid
+              .navbar-header
+                button.navbar-toggle(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+                  span.sr-only Toggle navigation
+                  span.icon-bar
+                  span.icon-bar
+                  span.icon-bar
+                a.navbar-brand
+                  i.fa.fa-skype.fa-lg
+                    | &nbsp Sdent 
+              #bs-example-navbar-collapse-1.collapse.navbar-collapse
+                ul.nav.navbar-nav
+                  li.active
+                    a(href='#/cal')
+                      i.fa.fa-list-alt.fa-lg
+                        &nbsp 케이스 신청 
+                  li
+                    a(href='#/user') 
+                      i.fa.fa-calendar.fa-lg
+                        &nbsp 개인일정
+                  li
+                    a
+                      i.fa.fa-clock-o.fa-2x
+                  li#cirClock
+                  li
+                    a#clockRefresh(ng-click="clockRe()")
+                        i.fa.fa-repeat.fa-2x
+
+                ul.nav.navbar-nav.navbar-right
+                  li
+                    a(href='#/user') 
+                      i.fa.fa-linkedin-square.fa-2x
+                        &nbsp {{userName}} 
+                  li.dropdown
+                    a.dropdown-toggle(href='#', data-toggle='dropdown')
+                      i.fa.fa-cog.fa-2x
+                    ul.dropdown-menu
+                      li
+                        a(href='/') 
+                          i.fa.fa-user.fa-lg
+                          |  &nbsp User
+                      li
+                        a(ng-click="logout()")
+                          i.fa.fa-unlock.fa-lg
+                          |  Log out
+
+br
+br
+br
+div.container
+  div.col-md-4
+    .panel.panel-default#eventList     
+      .panel-heading 이벤 트리스트
+      .panel-body
+        ul.list-unstyled
+         li(ng-repeat='event in events')
+            a(ng-click='loadEvent(event)')
+              {{event.event}}
+  div.col-md-4
+    .panel.panel-default#applyInfo
+      .panel-heading 신청 이벤트 
+        {{eventInfo.event}} {{eventInfo.name}}
+      table.table.table-striped.table-bordered.table-condensed
+            tr
+              td
+                신청기간
+              td
+                {{eventInfo.startDate|date:'yyyy-MM-dd'}}~{{eventInfo.endDate|date:'yyyy-MM-dd'}}
+            tr
+              td
+                우선신청시간
+              td
+                {{eventInfo.priorTime|date:'yyyy-MM-dd HH:mm'}}~{{eventInfo.priorEnd|date:'yyyy-MM-dd HH:mm'}}
+            tr
+              td
+                일반신청시간
+              td
+                {{eventInfo.applyTime|date:'yyyy-MM-dd HH:mm'}}~{{eventInfo.applyEnd|date:'yyyy-MM-dd HH:mm'}}
+            tr
+              td
+                기본신청횟수
+              td
+                {{eventInfo.min}}
+            tr
+              td
+                우선신청횟수
+              td
+                {{eventInfo.priorMin}}
+  div.row.col-md-4
+    .panel.panel-default.list-inline
+      .panel-heading 우선신청자
+      ul.list-group.list-inline
+        span.badge(ng-repeat='ps in eventInfo.priorList'){{ps.name}} 
+    .panel.panel-default
+      .panel-heading 여러번신청해야하는 사람
+      ul.list-group.list-inline
+        span.badge(ng-repeat='ps in eventInfo.exceptors'){{ps.except.name}}(&nbsp;{{ps.num}}&nbsp;)
+    .panel.panel-default
+      .panel-heading 본인신청횟수/신청해야할횟수
+      sapn.badge {{count}}/{{max}}
+
+div.container      
+  div#calendar(ui-calendar="uiConfig.calendar" ng-model="eventSources")
+
 

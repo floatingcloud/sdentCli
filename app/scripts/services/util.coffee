@@ -34,6 +34,29 @@ angular.module('services').factory 'Util', ($q, $http, $location,$document, Host
         deferred.reject status
       return deferred.promise
 
+  reqSdent: (method, path, param) ->
+      console.log 'hi'
+      $http[method]("https://sdent.snu.ac.kr/#{path}", (if method == "get" then params:param else param), 
+                                headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded'
+                                            'Access-Control-Allow-Origin': '*'
+                                
+                                })
 
+    reqSdentCal: (method,path, param) ->
+      $http[method]("https://sdent.snu.ac.kr/#{path}", (if method == "get" then params:param else param), 
+                                headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded'
+                                            'Access-Control-Allow-Origin': '*'
+                                
+                                })
 
-
+  loginSdent: (para)->
+    deferred = $q.defer()
+    console.log 'gigi'
+    this.reqSdent('post','_common/login.php',para)
+      .success (data) ->
+        deferred.resolve data
+      .error (data, status) ->
+        deferred.reject status
+      return deferred.promise

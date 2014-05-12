@@ -9,3 +9,5 @@ angular.module('services', [])
   .constant('API_PORT', 3000)
   // API_HOST를 상수로 정의.
   .constant('API_HOST', "http://localhost");
+  //.constant('API_HOST', "http://sdent.kr");
+	//.constant('API_HOST', "http://0.0.0.0");.kr");

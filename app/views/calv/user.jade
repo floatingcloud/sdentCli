@@ -1,0 +1,61 @@
+head
+  body
+      nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+          .container-fluid
+              .navbar-header
+                button.navbar-toggle(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+                  span.sr-only Toggle navigation
+                  span.icon-bar
+                  span.icon-bar
+                  span.icon-bar
+                a.navbar-brand
+                  i.fa.fa-skype.fa-lg
+                    | &nbsp Sdent 
+              #bs-example-navbar-collapse-1.collapse.navbar-collapse
+                ul.nav.navbar-nav
+                  li
+                    a(href='#/cal')
+                      i.fa.fa-list-alt.fa-lg
+                        &nbsp 케이스 신청 
+                  li.active
+                    a(href='#/user') 
+                      i.fa.fa-calendar.fa-lg
+                        &nbsp 개인일정
+                  li
+                    a
+                      i.fa.fa-clock-o.fa-2x
+                  li#cirClock
+                  li
+                    a#clockRefresh(ng-click="clockRe()")
+                        i.fa.fa-repeat.fa-2x
+
+                ul.nav.navbar-nav.navbar-right
+                  li
+                    a(href='#/user') 
+                      i.fa.fa-linkedin-square.fa-2x
+                        &nbsp {{userName}} 
+                  li.dropdown
+                    a.dropdown-toggle(href='#', data-toggle='dropdown')
+                      i.fa.fa-cog.fa-2x
+                    ul.dropdown-menu
+                      li
+                        a(href='/') 
+                          i.fa.fa-user.fa-lg
+                          |  &nbsp User
+                      li
+                        a(ng-click="logout()")
+                          i.fa.fa-unlock.fa-lg
+                          |  Log out
+
+br
+br
+br
+br
+div.container      
+  div#calendar(ui-calendar="uiConfig.calendar" ng-model="eventSources")
+
+
+
+
+
+

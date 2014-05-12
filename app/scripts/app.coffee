@@ -8,6 +8,10 @@ angular.module("hiin", [
   "services"
   "btford.socket-io"
   "ui.calendar"
+  "ui.bootstrap"
+  #"dialogs"
+  "infinite-scroll"
+  "multi-select"
 ]).config ($routeProvider) ->
   $routeProvider
     .when("/",
@@ -30,22 +34,22 @@ angular.module("hiin", [
         templateUrl: "views/admin/admin.html"
         controller: "adminCtrl"
     )
-    #.when("/groupChat",
-        #templateUrl: "views/chat/group_chat.html"
-        #controller: "groupChatCtrl"
-    #)
-    #.when("/showProfile",
-        #templateUrl: "views/menu/profile.html"
-        #controller: "MenuCtrl"
-    #)
-    #.when("/showEvents",
-        #templateUrl: "views/menu/event.html"
-        #controller: "MenuCtrl"
-    #)
-    #.when("/showSetting",
-        #templateUrl: "views/menu/setting.html"
-        #controller: "MenuCtrl"
-    #)
+    .when("/user",
+        templateUrl: "views/calv/user.html"
+        controller: "userCtrl"
+    )
+    .when("/adminEdit",
+        templateUrl: "views/admin/adminEditmini.html"
+        controller: "adminEditminiCtrl"
+    )
+    .when("/adminDel",
+        templateUrl: "views/admin/adminDel.html"
+        controller: "adminDelCtrl"
+    )
+    .when("/adminResult",
+        templateUrl: "views/admin/adminResult.html"
+        controller: "adminResultCtrl"
+    )
     .otherwise redirectTo: "/"
     return
 .config ($httpProvider) ->
@@ -53,4 +57,9 @@ angular.module("hiin", [
       return data  if data is `undefined`
       $.param data
     $httpProvider.defaults.withCredentials = true
+    #$httpProvider.defaults.useXDomain = true
+    #delete $httpProvider.defaults.headers.common['X-Requested-With']
+    
+    #$httpProvider.defaults.headers.common = {Accept: "application/json, text/plain, */*"}
+    #$httpProvider.defaults.headers.post = {"Content-Type": "application/json;charset=utf-8"}
   return

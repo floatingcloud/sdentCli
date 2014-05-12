@@ -44,6 +44,38 @@
           return deferred.reject(status);
         });
         return deferred.promise;
+      },
+      reqSdent: function(method, path, param) {
+        console.log('hi');
+        return $http[method]("https://sdent.snu.ac.kr/" + path, (method === "get" ? {
+          params: param
+        } : param), {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      },
+      reqSdentCal: function(method, path, param) {
+        return $http[method]("https://sdent.snu.ac.kr/" + path, (method === "get" ? {
+          params: param
+        } : param), {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      },
+      loginSdent: function(para) {
+        var deferred;
+        deferred = $q.defer();
+        console.log('gigi');
+        this.reqSdent('post', '_common/login.php', para).success(function(data) {
+          return deferred.resolve(data);
+        }).error(function(data, status) {
+          return deferred.reject(status);
+        });
+        return deferred.promise;
       }
     };
   });

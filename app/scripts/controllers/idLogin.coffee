@@ -15,6 +15,11 @@ angular.module('hiin')
               sessionStorage.setItem("loginUserStNum", data.studentNumber)
               sessionStorage.setItem("loginUserNumber", data.number)
               sessionStorage.setItem("loginUserObjid", data._id)
+              localStorage.setItem("logined", true)
+              localStorage.setItem("loginUserName", data.name)
+              localStorage.setItem("loginUserStNum", data.studentNumber)
+              localStorage.setItem("loginUserNumber", data.number)
+              localStorage.setItem("loginUserObjid", data._id)
               Util.Go('cal')
             .error (error, status) ->
               console.log status

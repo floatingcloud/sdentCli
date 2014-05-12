@@ -1,0 +1,67 @@
+nav.navbar.navbar-inverse(role='navigation')
+    .container-fluid
+        //
+           Brand and toggle get grouped for better mobile display 
+        .navbar-header
+          button.navbar-toggle(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='')  
+            i.fa.fa-skype.fa-lg
+              | &nbsp Sdent admin
+        //
+           Collect the nav links, forms, and other content for toggling 
+        #bs-example-navbar-collapse-1.collapse.navbar-collapse
+          ul.nav.navbar-nav
+            li
+              a(href='#/admin')
+                i.fa.fa-list-alt.fa-lg
+                  &nbsp 이벤트생성
+            li
+              a(href='#/adminEdit') 
+                i.fa.fa-pencil-square-o.fa-lg
+                  &nbsp 이벤트수정
+
+            li.active
+              a(href='#/adminDel') 
+                i.fa.fa-trash-o.fa-lg
+                  &nbsp 이벤트삭제
+            li
+              a(href='#/adminResult') 
+                i.fa.fa-trash-o.fa-lg
+                  &nbsp 결과보기
+
+
+
+          ul.nav.navbar-nav.navbar-right
+            li.dropdown
+              a.dropdown-toggle(href='#', data-toggle='dropdown')
+                i.fa.fa-cog.fa-lg
+                  | &nbsp Setting
+                b.caret
+              ul.dropdown-menu
+                li
+                  a(href='') 
+                    i.fa.fa-user.fa-lg
+                    |  &nbsp User
+                li
+                  a(href='')
+                    i.fa.fa-unlock.fa-lg
+                    |  Log out
+
+
+div.container
+
+
+  div.col-md-6
+    .panel.panel-default#eventList     
+      .panel-heading 이벤 트리스트
+      .panel-body
+        ul.list-unstyled
+         li(ng-repeat='event in events')
+            a(ng-click='delTriger(event)').badge
+              {{event.event}} {{event.name}}
+
+  

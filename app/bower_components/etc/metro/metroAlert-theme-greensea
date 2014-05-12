@@ -1,0 +1,104 @@
+/**
+*
+* jQuery Metro Alert Theme GreenSea
+* URL: http://www.codecanyon.net/user/bamdaa
+* Version: 1.0
+* Author: BamDaa
+* Author URL: http://www.codecanyon.net/user/bamdaa
+*
+*/
+
+/* === Back Shade === */
+.bmd-alert-shade.greensea
+{
+	background: rgba(0, 0, 0, 0.5);
+}
+
+/* === Alert, Confirm, Prompt Back === */
+.bmd-alert-alert.greensea
+{
+	background: #16a085;
+	color: #ecf0f1;	
+}
+
+/* === Notification Back === */
+.bmd-alert-message.greensea
+{
+	background: #16a085;
+	color: #ecf0f1;
+	border: 3px solid rgba(255,255,255,0.1);
+}
+
+/* === Title === */
+.bmd-alert-alert.greensea .bmd-alert-title
+{
+	font-family: "Open Sans Condensed";
+	font-size: 22px;	
+	margin: 0;
+	text-align: center;
+}
+
+/* === Title in Notification Message === */
+.bmd-alert-message.greensea .bmd-alert-title
+{
+	line-height: 1em;
+	text-align: left;
+}
+
+/* === Message Container === */
+.bmd-alert-alert.greensea .bmd-alert-content,
+.bmd-alert-message.greensea .bmd-alert-content
+{
+	font-family: "Open Sans Condensed";
+	font-size: 16px;
+	text-align: center;
+}
+
+/* === Message Container in Notification Message === */
+.bmd-alert-message.greensea .bmd-alert-content
+{
+	text-align: left;
+}
+
+/* === Prompt input Container === */
+.bmd-alert-alert.greensea .bmd-alert-input
+{
+	margin: 10px 0 0;
+}
+
+/* === Prompt input === */
+.bmd-alert-alert.greensea .bmd-alert-input input
+{
+	font: 12px Tahoma;
+	color: #444;
+	border: 1px solid #ddd ;
+	box-shadow: 0 0 5px 0 #ddd inset; 
+	background: #fff;
+	padding: 7px;	
+}
+
+/* === Buttons container === */
+.bmd-alert-alert.greensea .bmd-alert-foot
+{
+	margin-top: 20px;
+	text-align: center;
+}
+
+/* === Buttons === */
+.bmd-alert-alert.greensea .bmd-alert-foot button
+{
+	font-family: "Open Sans Condensed";
+	font-size: 16px;
+	font-weight: bold;
+	padding: 3px 12px;
+	border: 0;
+	background: #ecf0f1;
+	color: #16a085;
+	margin: 0 0 0 2px;
+}
+
+/* === Custom buttons === */
+.bmd-alert-alert.greensea .bmd-custom-button
+{
+
+}

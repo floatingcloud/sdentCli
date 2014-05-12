@@ -3,8 +3,14 @@
 angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
   userName=[]
   user_id=[]
-  userNameE=[]
-  user_idE=[]
+  $scope.selDataPrior=[]
+  $scope.selOutputPrior=[]
+  $scope.selDataEx=[]
+  $scope.selOutpEx=[]
+  $scope.selDataSuper=[]
+  $scope.selOutpSuper=[]
+  $scope.eventColor
+  $scope.caseGridRows
   #Util.getUsersList()
     #.then (data) ->
       #for item in data
@@ -15,8 +21,8 @@ angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
   $scope.header1 = [
     '담당자'
     '카테고리'
-    '날짜'
-    '시간'
+    '날짜시간'
+    '오전오후'
     '배정인원'
   ]
   $scope.header2 = [
@@ -26,34 +32,39 @@ angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
     '끝나는일'
     '신청시간'
     '신청종료'
+    '신청횟수'
     '우선신청'
     '우선종료'
-    '신청횟수'
+    '우선횟수'
   ]
   $scope.header3 = [
-    '횟수에외'
+    '횟수예외'
     '횟수'
+  ]
+  $scope.header4 = [
+    '우선권자'
   ]
   sendData = {}
   $casesContainer = {}
   $eventContainer = {}
   $priorContainer = {}
   $exceptionContainer = {}
+  $superContainer = {}
   $scope.submit = -> 
     sendData.event = $eventContainer.data('handsontable').getData()
     sendData.cases = $casesContainer.data('handsontable').getData()
     sendData.prior =[]
     sendData.exception = []
+    sendData.color = $scope.eventColor
     tmpPrior = $priorContainer.data('handsontable').getData()
     tmpPrior.forEach (item) ->
       index = userName.indexOf(item[0])
       sendData.prior.push user_id[index]
-
     tmpEx = $exceptionContainer.data('handsontable').getData()
     tmpEx.forEach (item) ->
-      index = userNameE.indexOf(item[0])
+      index = userName.indexOf(item[0])
       sendData.exception.push {
-                                userId : user_idE[index]
+                                userId : user_id[index]
                                 many : item[1]
                               }
       console.log index
@@ -69,7 +80,7 @@ angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
           console.log "$http.error"
 
   $casesContainer=$("#dataTable").handsontable(
-      minRows: 10
+      startRows: 1
       rowHeaders: true
       colHeaders: $scope.header1
       contextMenu: true
@@ -102,7 +113,7 @@ angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
       colHeaders: $scope.header2
       manualColumnResize: true
       startRows : 1
-      startCols : 9
+      startCols : 10
       columns:  [
                   {
                     type:"text"
@@ -121,6 +132,9 @@ angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
                   }
                   {
                     type:"date"
+                  }
+                  {
+                    type:"numeric"
                   }
                   {
                     type:"date"
@@ -136,27 +150,16 @@ angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
   )
   $priorContainer=$("#prior").handsontable(
       rowHeaders: true
-      colHeaders: ['우선권자'] 
+      colHeaders: $scope.header4
       contextMenu: true
       startCols : 1
       startRows : 1
       manualColumnResize: true
       columns:  [
                   {
-                    type:"autocomplete"
-                    filter: false
-                    source: userName
-                    strict: true
+                    type:"text"
                   }
                 ]
-      beforeInit: Util.getUsersList()
-                      .then (data) ->
-                        for item in data
-                          userName.push item.number + item.name
-                          user_id.push item._id
-                      ,(status) ->
-                          alert status
- 
   )
   $exceptionContainer=$("#exception").handsontable(
       rowHeaders: true
@@ -167,30 +170,86 @@ angular.module('hiin').controller 'adminCtrl', ($scope, $q, $window, Util) ->
       manualColumnResize: true
       columns:  [
                   {
-                    type:"autocomplete"
-                    filter: false
-                    source: userName
-                    strict: true
+                    type:"text"
                   }
                   {
                     type:"numeric"
                   }
                 ]
-      beforeInit: Util.getUsersList()
-                      .then (data) ->
-                        for item in data
-                          userNameE.push item.number + item.name
-                          user_idE.push item._id
-                      ,(status) ->
-                         alert status
- 
+      #beforeInit: Util.getUsersList()
+                      #.then (data) ->
+                        #for item in data
+                          #userNameE.push item.number + item.name
+                          #user_idE.push item._id
+                      #,(status) ->
+                         #alert status
   )
+  #$superContainer=$("#superUser").handsontable(
+      #rowHeaders: true
+      #colHeaders: '슈퍼유저'
+      #contextMenu: true
+      #startCols : 1
+      #startRows : 1
+      #manualColumnResize: true
+      #columns:  [
+                  #{
+                    #type:"text"
 
-  Util.getEventsList()
-        .then (data) ->
-            $scope.events = data
-        ,(status) ->
-            alert status
+                  #}
+                #]
+
+  #)
+
+  Util.getUsersList()
+      .then (data) ->
+        for item in data
+          tpd1 = {
+                  name : item.number+item.name
+                  value: item._id
+                  ticked: false
+                }
+          tpd2 = {
+                  name : item.number+item.name
+                  value: item._id
+                  ticked: false
+                }
+          userName.push item.number+item.name
+          user_id.push item._id
+          $scope.selDataPrior.push tpd1
+          $scope.selDataEx.push tpd2
+      ,(status) ->
+         alert status
+
+  $scope.dlc = () ->
+    console.log $scope.selOutputPrior
+    console.log $scope.selOutputEx
+  
+  
+  $scope.prior = () ->
+    pr = new Array
+    $scope.selOutputPrior.forEach (item) ->
+      tmpA = new Array
+      tmpA.push item.name
+      pr.push tmpA
+    $priorContainer.data('handsontable').loadData(pr)
+
+
+  $scope.excep = () ->
+    ecp = new Array
+    $scope.selOutputEx.forEach (item) ->
+      tmpA = new Array
+      tmpA.push item.name
+      ecp.push tmpA
+    $exceptionContainer.data('handsontable').loadData(ecp)
+    console.log $scope.eventColor
+    console.log $scope.caseGridRows
+
+  $scope.changeRows = () ->
+    console.log $scope.caseGridRows
+    $casesContainer.data('handsontable').alter(
+      'insert_row',null,$scope.caseGridRows
+    )
+
 
   #$scope.deleteEvent =  Util.getEventsList()
                             #.then (data) ->
