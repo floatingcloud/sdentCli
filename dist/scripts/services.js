@@ -8,6 +8,8 @@ angular.module('services', [])
   // API_PORT를 상수로 정의. API_PORT는 나중에 dependency injection에서 쓰일 수 있음.
   .constant('API_PORT', 3000)
   // API_HOST를 상수로 정의.
+  //.constant('API_HOST', "http://localhost");
+  //.constant('API_HOST', "http://sdent.kr");
   .constant('API_HOST', "http://localhost");
 
 (function() {
@@ -68,6 +70,58 @@ angular.module('services', [])
         var deferred;
         deferred = $q.defer();
         this.makeReq('get', 'userList').success(function(data) {
+          return deferred.resolve(data);
+        }).error(function(data, status) {
+          return deferred.reject(status);
+        });
+        return deferred.promise;
+      },
+      getEventsList: function() {
+        var deferred;
+        deferred = $q.defer();
+        this.makeReq('get', 'eventList').success(function(data) {
+          return deferred.resolve(data);
+        }).error(function(data, status) {
+          return deferred.reject(status);
+        });
+        return deferred.promise;
+      },
+      deleteEvent: function(para) {
+        var deferred;
+        deferred = $q.defer();
+        this.makeReq('post', 'deleteEvent', para).success(function(data) {
+          return deferred.resolve(data);
+        }).error(function(data, status) {
+          return deferred.reject(status);
+        });
+        return deferred.promise;
+      },
+      reqSdent: function(method, path, param) {
+        console.log('hi');
+        return $http[method]("https://sdent.snu.ac.kr/" + path, (method === "get" ? {
+          params: param
+        } : param), {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      },
+      reqSdentCal: function(method, path, param) {
+        return $http[method]("https://sdent.snu.ac.kr/" + path, (method === "get" ? {
+          params: param
+        } : param), {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      },
+      loginSdent: function(para) {
+        var deferred;
+        deferred = $q.defer();
+        console.log('gigi');
+        this.reqSdent('post', '_common/login.php', para).success(function(data) {
           return deferred.resolve(data);
         }).error(function(data, status) {
           return deferred.reject(status);

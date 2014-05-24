@@ -8,9 +8,9 @@ angular.module('services', [])
   // API_PORT를 상수로 정의. API_PORT는 나중에 dependency injection에서 쓰일 수 있음.
   .constant('API_PORT', 3000)
   // API_HOST를 상수로 정의.
-  .constant('API_HOST', "http://localhost");
+  //.constant('API_HOST', "http://localhost");
   //.constant('API_HOST', "http://sdent.kr");
-	//.constant('API_HOST', "http://0.0.0.0");.kr");
+  .constant('API_HOST', "http://localhost");
 
 (function() {
   angular.module('services').factory('Host', function($window, API_HOST, API_PORT) {
@@ -1087,6 +1087,12 @@ angular.module('services', [])
         }
       }
     };
+    socket.removeAllListeners('alert');
+    socket.removeAllListeners('eventList');
+    socket.removeAllListeners('loadEventInfo');
+    socket.removeAllListeners('serverTime');
+    socket.removeAllListeners('loadCases');
+    socket.removeAllListeners('applyOk');
     $scope.eventSources = [];
     socket.emit('eventList');
     socket.on('eventList', function(data) {
@@ -1112,6 +1118,7 @@ angular.module('services', [])
     });
     socket.on('alert', function(data) {
       socket.emit('loadCases', $scope.currentEventId);
+      console.log("alert");
       return BootstrapDialog.show({
         type: BootstrapDialog.TYPE_WARNING,
         title: '경고',
@@ -1130,6 +1137,7 @@ angular.module('services', [])
     });
     socket.on('applyOk', function(data) {
       socket.emit('loadCases', $scope.currentEventId);
+      console.log("applyOk");
       return BootstrapDialog.show({
         type: BootstrapDialog.TYPE_SUCCESS,
         title: '확인',

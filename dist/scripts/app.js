@@ -1,6 +1,6 @@
 (function() {
   "use strict";
-  angular.module("hiin", ["ngCookies", "ngResource", "ngSanitize", "ngRoute", "services", 'btford.socket-io']).config(function($routeProvider) {
+  angular.module("hiin", ["ngCookies", "ngResource", "ngSanitize", "ngRoute", "services", "btford.socket-io", "ui.calendar", "ui.bootstrap", "infinite-scroll", "multi-select"]).config(function($routeProvider) {
     $routeProvider.when("/", {
       templateUrl: "views/login/login.html",
       controller: "LoginCtrl"
@@ -16,6 +16,18 @@
     }).when("/admin", {
       templateUrl: "views/admin/admin.html",
       controller: "adminCtrl"
+    }).when("/user", {
+      templateUrl: "views/calv/user.html",
+      controller: "userCtrl"
+    }).when("/adminEdit", {
+      templateUrl: "views/admin/adminEditmini.html",
+      controller: "adminEditminiCtrl"
+    }).when("/adminDel", {
+      templateUrl: "views/admin/adminDel.html",
+      controller: "adminDelCtrl"
+    }).when("/adminResult", {
+      templateUrl: "views/admin/adminResult.html",
+      controller: "adminResultCtrl"
     }).otherwise({
       redirectTo: "/"
     });

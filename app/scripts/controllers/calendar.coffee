@@ -62,15 +62,18 @@ angular.module('hiin')
               
       }
     }
-
-
+    socket.removeAllListeners 'alert'
+    socket.removeAllListeners 'eventList'
+    socket.removeAllListeners 'loadEventInfo'
+    socket.removeAllListeners 'serverTime'
+    socket.removeAllListeners 'loadCases'
+    socket.removeAllListeners 'applyOk'
 
 
     $scope.eventSources = []
 
-
     socket.emit 'eventList'
-    
+
     socket.on 'eventList', (data) ->
       #console.log data
       $scope.events = data
@@ -96,7 +99,8 @@ angular.module('hiin')
 
     socket.on 'alert', (data) ->
       socket.emit 'loadCases', $scope.currentEventId
-      #$dialogs.error 'ALERT', data
+
+      console.log("alert")
       BootstrapDialog.show({
               type: BootstrapDialog.TYPE_WARNING
               title: '경고'
@@ -112,7 +116,8 @@ angular.module('hiin')
 
     socket.on 'applyOk', (data) ->
       socket.emit 'loadCases', $scope.currentEventId
-      #$dialogs.notify 'Success', data
+
+      console.log("applyOk")
       BootstrapDialog.show({
               type: BootstrapDialog.TYPE_SUCCESS 
               title: '확인'

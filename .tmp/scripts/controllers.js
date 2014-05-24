@@ -905,6 +905,12 @@
         }
       }
     };
+    socket.removeAllListeners('alert');
+    socket.removeAllListeners('eventList');
+    socket.removeAllListeners('loadEventInfo');
+    socket.removeAllListeners('serverTime');
+    socket.removeAllListeners('loadCases');
+    socket.removeAllListeners('applyOk');
     $scope.eventSources = [];
     socket.emit('eventList');
     socket.on('eventList', function(data) {
@@ -930,6 +936,7 @@
     });
     socket.on('alert', function(data) {
       socket.emit('loadCases', $scope.currentEventId);
+      console.log("alert");
       return BootstrapDialog.show({
         type: BootstrapDialog.TYPE_WARNING,
         title: '경고',
@@ -948,6 +955,7 @@
     });
     socket.on('applyOk', function(data) {
       socket.emit('loadCases', $scope.currentEventId);
+      console.log("applyOk");
       return BootstrapDialog.show({
         type: BootstrapDialog.TYPE_SUCCESS,
         title: '확인',
